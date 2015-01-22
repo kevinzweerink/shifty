@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Shifty</title>
+  <script src="/js/tracking-min.js"></script>
+  <script src="/js/data/eye-min.js"></script>
+  <link href="style.css" rel="stylesheet">
+
+  <style>
+  	#video, #canvas {
+  		position: absolute;
+  		top: 0;
+  		left: calc(50% - 160px);
+  	}
+
+    #video {
+      opacity: 0;
+    }
+
+    #drawing {
+      position: absolute;
+    }
+  </style>
+</head>
+<body>
+	<div class="tracker">
+		<video id="video" width="320" height="240" preload autoplay loop muted></video>
+    <canvas id="canvas" width="320" height="240"></canvas>
+    <canvas id="drawing" width="1280" height="600"></canvas>
+	</div>
+
+	<script src="/js/main.js"></script>
+</body>
+</html>
