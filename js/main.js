@@ -1,6 +1,6 @@
 window.onload = function() {
 	tracking.ColorTracker.registerColor('green', function(r, g, b) {
-	  if (g > r && g > b && g > 150) {
+	  if (g > r && g > b) {
 	    return true;
 	  }
 	  return false;
@@ -8,7 +8,28 @@ window.onload = function() {
 
 	window.stateMachine = {
 		draw : false,
-		calibrate : false
+		calibrate : false,
+		recordCalibrationRectangle : function(centroid) {
+			// Check if new top left
+			if ((centroid.x < drawingArea.tl.x) && (centroid.y < drawingArea.tl.y)) {
+				drawingArea.tl = centroid;
+			}
+
+			// Check if new top right
+			if ((centroid.x > drawingArea.tr.x) && (centroid.y < drawingArea.tr.y)) {
+				drawingArea.tr = centroid;
+			}
+
+			// Check if new bottom left
+			if ((centroid.x < drawingArea.bl.x) && (centroid.y > drawingArea.bl.y)) {
+				drawingArea.bl = centroid;
+			}
+
+			// Check if new bottom right
+			if ((centroid.x > drawingArea.br.x) && (centroid.y > drawingArea.br.y)) {
+				drawingArea.br = centroid;
+			}
+		}
 	}
 
 	var video = document.getElementById('video');
@@ -24,11 +45,13 @@ window.onload = function() {
 	var preserveAspectRatioWhenScaling = true;
 
 	var drawingArea = {
-		ax : canvas.width,
-		ay : canvas.height,
-		bx : 0,
-		by : 0
+		br : { x : 0, y : 0},
+		bl : { x : canvas.width, y : 0 },
+		tr : { x : 0, y : canvas.height },
+		tl : { x : canvas.width, y : canvas.height }
 	}
+
+	var scaledDrawingArea = {};
 
 	// Scaling Functions, maps position from camera video onto drawing board.
 
@@ -56,6 +79,38 @@ window.onload = function() {
 	var lkp;
 	var refs = [];
 	var maxRefs = 100;
+
+	var drawCalibratedAreaRect = function() {
+
+		scaledDrawingArea.br = {
+			x : xScale(drawingArea.br.x),
+			y : yScale(drawingArea.br.y)
+		}
+
+		scaledDrawingArea.bl = {
+			x : xScale(drawingArea.bl.x),
+			y : yScale(drawingArea.bl.y)
+		}
+
+		scaledDrawingArea.tr = {
+			x : xScale(drawingArea.tr.x),
+			y : yScale(drawingArea.tr.y)
+		}
+		scaledDrawingArea.tl = {
+			x : xScale(drawingArea.tl.x),
+			y : yScale(drawingArea.tl.y)
+		}
+
+		drawingContext.strokeStyle = "#32FA78";
+		drawingContext.lineWidth = 2;
+		drawingContext.beginPath();
+		drawingContext.moveTo(scaledDrawingArea.tl.x, scaledDrawingArea.tl.y);
+		drawingContext.lineTo(scaledDrawingArea.tr.x, scaledDrawingArea.tr.y);
+		drawingContext.lineTo(scaledDrawingArea.br.x, scaledDrawingArea.br.y);
+		drawingContext.lineTo(scaledDrawingArea.bl.x, scaledDrawingArea.bl.y);
+		drawingContext.lineTo(scaledDrawingArea.tl.x, scaledDrawingArea.tl.y);
+		drawingContext.stroke();
+	}
 
 	var pen = {
 
@@ -107,21 +162,8 @@ window.onload = function() {
 				  drawCircle(dp.x, dp.y, (8-velocity));
 				} else if (window.stateMachine.calibrate && centroid) {
 
-					if (centroid.x < drawingArea.ax) {
-						drawingArea.ax = centroid.x
-					}
+					stateMachine.recordCalibrationRectangle(centroid);
 
-					if (centroid.x > drawingArea.bx) {
-						drawingArea.bx = centroid.x
-					}
-
-					if (centroid.y < drawingArea.ay) {
-						drawingArea.ay = centroid.y
-					}
-
-					if (centroid.y > drawingArea.by) {
-						drawingArea.by = centroid.y
-					}
 				}
 			}
 
@@ -205,8 +247,10 @@ window.onload = function() {
 		    	y : yScale(centroid.y)
 		    }
 
-		    if (stateMachine.draw) {
+		    if (stateMachine.draw && centroid) {
 			    drawCircle(ref.x, ref.y, 1);
+			  } else {
+			  	stateMachine.recordCalibrationRectangle(centroid);
 			  }
 
 		  });
@@ -225,6 +269,7 @@ window.onload = function() {
 	document.onkeypress = function(e) {
 		if (e.keyCode == 32) {
 			var d = window.stateMachine.draw;
+			trackCounter = 0;
 			window.stateMachine.draw = !d;
 			window.stateMachine.calibrate = d;
 		}
@@ -233,11 +278,19 @@ window.onload = function() {
 			window.stateMachine.calibrate = true;
 			window.stateMachine.draw = false;
 
+			drawingArea = {
+				br : { x : 0, y : 0},
+				bl : { x : canvas.width, y : 0 },
+				tr : { x : 0, y : canvas.height },
+				tl : { x : canvas.width, y : canvas.height }
+			}
+
+
 			window.setTimeout(function() {
 				window.stateMachine.calibrate = false;
 				window.stateMachine.draw = false;
 				alert("Calibration complete");
-				console.log(drawingArea);
+				drawCalibratedAreaRect();
 			}, 10000);
 		}
 

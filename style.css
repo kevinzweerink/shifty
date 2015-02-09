@@ -1,2 +1,40 @@
 /* Eric Meyer's Reset CSS v2.0 - http://cssreset.com */
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{border:0;font-size:100%;font:inherit;vertical-align:baseline;margin:0;padding:0}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:none}table{border-collapse:collapse;border-spacing:0}
+
+.info {
+	box-sizing: border-box;
+	position: fixed;
+	right: 0;
+	top: 0;
+	height: 100vh;
+	width: 300px;
+	background: rgba(0,0,0,0.9);
+	font-family: 'inconsolata', monospace;
+	color: rgba(255,255,255,0.7);
+	padding: 1em;
+	opacity: .2;
+	line-height: 1.4;
+}
+
+.info:hover {
+	opacity: 1;
+}
+
+.info > * {
+	margin-bottom: 1em;
+}
+
+.info li {
+	margin-bottom: 1em;
+	padding-left: 4em;
+}
+
+.info li span {
+	display: inline-block;
+	color: #fff;
+	text-transform: uppercase;
+	margin-right: 1em;
+	margin-left: -4em;
+	width: 3em;
+	text-align: right;
+}

@@ -4,7 +4,10 @@
   <meta charset="utf-8">
   <title>Shifty</title>
   <script src="/js/tracking-min.js"></script>
-  <script src="/js/data/eye-min.js"></script>
+
+  <script src="//use.typekit.net/ipx5clk.js"></script>
+  <script>try{Typekit.load();}catch(e){}</script>
+  
   <link href="style.css" rel="stylesheet">
 
   <style>
@@ -29,6 +32,21 @@
     <canvas id="canvas" width="320" height="240"></canvas>
     <canvas id="drawing" width="1280" height="600"></canvas>
 	</div>
+
+  <div class="info">
+    <h1>Shifty</h1>
+
+    <p>This program was used to generate letterforms by tracking the direction of the user's gaze as they traced an imagined letterform on a blank surface.</p>
+
+    <p>The program tracks a specific range of greens as they appear in the webcam video. Try the headband on to test</p>
+
+    <p>Once the program begins to track the headband, the following key commands may be used:</p>
+
+    <ul>
+      <li><span class="key-command">Space</span>Begins recording, draws a dot each frame at the centroid of the detected area</li>
+      <li><span class="key-command">D</span>Clears the current drawing</li>
+    </ul>
+  </div>
 
 	<script src="/js/main.js"></script>
 </body>
