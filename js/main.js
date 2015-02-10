@@ -266,7 +266,10 @@ window.onload = function() {
 	  
 	});
 
-	document.onkeypress = function(e) {
+	document.addEventListener('keyup', function(e) {
+
+		console.log(e.keyCode);
+
 		if (e.keyCode == 32) {
 			var d = window.stateMachine.draw;
 			trackCounter = 0;
@@ -274,27 +277,8 @@ window.onload = function() {
 			window.stateMachine.calibrate = d;
 		}
 
-		if (e.keyCode == 99) {
-			window.stateMachine.calibrate = true;
-			window.stateMachine.draw = false;
-
-			drawingArea = {
-				br : { x : 0, y : 0},
-				bl : { x : canvas.width, y : 0 },
-				tr : { x : 0, y : canvas.height },
-				tl : { x : canvas.width, y : canvas.height }
-			}
-
-
-			window.setTimeout(function() {
-				window.stateMachine.calibrate = false;
-				window.stateMachine.draw = false;
-				alert("Calibration complete");
-				drawCalibratedAreaRect();
-			}, 10000);
-		}
-
-		if (e.keyCode == 100) {
+		if (e.keyCode == 100 || e.keyCode == 68) {
+			console.log('yes');
 			drawingContext.clearRect(0, 0, drawing.width, drawing.height);
 		}
 
@@ -306,5 +290,5 @@ window.onload = function() {
 				video.style.opacity = 0;
 			} 
 		}
-	}
+	});
 }
